@@ -1,0 +1,22 @@
+[Unit]
+Description=ptgen MCP (Packet Tracer: ptgen + Mats2208 MCP-Packet-Tracer, живой PT на Windows-хосте)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ptgen
+Group=ptgen
+EnvironmentFile=/etc/default/ptgen
+EnvironmentFile=/etc/default/ptgen-live
+WorkingDirectory=/var/lib/ptgen
+ExecStart=/opt/ptgen/venv-live/bin/python /opt/ptgen/live/ptlive.py --http 8765
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/ptgen
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
