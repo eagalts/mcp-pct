@@ -1,0 +1,42 @@
+devices:
+- name: Switch0
+  model: 2960-24TT
+  x: 383.0
+  y: 321.0
+  config: |
+    interface Vlan1
+     shutdown
+- name: Router0
+  model: '1941'
+  x: 390.5
+  y: 138.0
+  config: |
+    interface GigabitEthernet0/0
+     shutdown
+    interface GigabitEthernet0/1
+     shutdown
+    interface Vlan1
+     shutdown
+- name: PC0
+  model: PC-PT
+  x: 263.5
+  y: 439.0
+  ip: 192.168.2.2/24
+  gateway: 192.168.2.1
+- name: PC1
+  model: PC-PT
+  x: 388.5
+  y: 441.0
+  ip: 192.168.3.2/24
+  gateway: 192.168.3.1
+- name: PC2
+  model: PC-PT
+  x: 510.5
+  y: 446.0
+  ip: 192.168.4.2/24
+  gateway: 192.168.4.1
+links:
+- [Router0, GigabitEthernet0/0, Switch0, GigabitEthernet0/1]
+- [PC0, FastEthernet0, Switch0, FastEthernet0/1]
+- [PC1, FastEthernet0, Switch0, FastEthernet0/2]
+- [PC2, FastEthernet0, Switch0, FastEthernet0/3]

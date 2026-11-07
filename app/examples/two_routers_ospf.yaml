@@ -1,0 +1,41 @@
+# Два офиса, OSPF между роутерами
+devices:
+  - name: R1
+    model: "1941"
+    config: |
+      interface GigabitEthernet0/0
+       description LAN-1
+       ip address 192.168.1.1 255.255.255.0
+       no shutdown
+      interface GigabitEthernet0/1
+       description to-R2
+       ip address 10.0.12.1 255.255.255.252
+       no shutdown
+      router ospf 1
+       router-id 1.1.1.1
+       network 192.168.1.0 0.0.0.255 area 0
+       network 10.0.12.0 0.0.0.3 area 0
+      ip route 0.0.0.0 0.0.0.0 10.0.12.2
+  - name: R2
+    model: "1941"
+    config: |
+      interface GigabitEthernet0/0
+       ip address 192.168.2.1 255.255.255.0
+       no shutdown
+      interface GigabitEthernet0/1
+       ip address 10.0.12.2 255.255.255.252
+       no shutdown
+      router ospf 1
+       router-id 2.2.2.2
+       network 192.168.2.0 0.0.0.255 area 0
+       network 10.0.12.0 0.0.0.3 area 0
+  - {name: SW1, model: 2960-24TT}
+  - {name: SW2, model: 2960-24TT}
+  - {name: PC1, model: PC-PT, ip: 192.168.1.10/24, gateway: 192.168.1.1}
+  - {name: PC2, model: PC-PT, ip: 192.168.2.10/24, gateway: 192.168.2.1}
+links:
+  - [R1, Gi0/1, R2, Gi0/1]
+  - [R1, Gi0/0, SW1, Gi0/1]
+  - [R2, Gi0/0, SW2, Gi0/1]
+  - [PC1, Fa0, SW1, Fa0/1]
+  - [PC2, Fa0, SW2, Fa0/1]

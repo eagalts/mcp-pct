@@ -1,0 +1,362 @@
+<title>PKT Сборщик</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: рабочий стол инженера — слева текст схемы, справа живой предпросмотр топологии и выдача файла */
+:root{
+  --bg:#EEF1EC; --panel:#FAFBF8; --ink:#1B2420; --muted:#5D6A63; --line:#D3DAD3;
+  --link:#2F8F55; --cross:#C8841B; --accent:#1F6F8B; --accent-ink:#FFFFFF; --bad:#B23A35; --bad-bg:#F8E7E5;
+  --node-r:#1F6F8B; --node-s:#3E5A4C; --node-h:#7A877F;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141A17; --panel:#1B2320; --ink:#E4EAE5; --muted:#97A49C; --line:#2E3934;
+  --link:#4FBF7A; --cross:#E3A33F; --accent:#5BB2CF; --accent-ink:#0D1A1F; --bad:#F08A84; --bad-bg:#3A2321;
+  --node-r:#5BB2CF; --node-s:#8DB09D; --node-h:#7E8C84; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141A17; --panel:#1B2320; --ink:#E4EAE5; --muted:#97A49C; --line:#2E3934;
+  --link:#4FBF7A; --cross:#E3A33F; --accent:#5BB2CF; --accent-ink:#0D1A1F; --bad:#F08A84; --bad-bg:#3A2321;
+  --node-r:#5BB2CF; --node-s:#8DB09D; --node-h:#7E8C84; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body)}
+.wrap{max-width:1360px;margin:0 auto;padding-inline:20px;padding-block:20px 40px;display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+h1{font:700 22px/1.2 var(--f-display);letter-spacing:-.01em;margin:0;text-wrap:balance}
+h1 small{display:block;font:400 13px/1.4 var(--f-body);color:var(--muted);letter-spacing:0;margin-top:4px}
+.tpl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.chip{font:500 12px/1 var(--f-mono);padding:6px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink)}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);min-width:0;display:flex;flex-direction:column}
+.tabs{display:flex;gap:2px;padding:6px 6px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{font:500 13px var(--f-body);color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,label.btn:focus-within,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pane{padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+textarea{width:100%;min-height:440px;resize:vertical;font:13px/1.55 var(--f-mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px;tab-size:2}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px var(--f-body);border-radius:6px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn input{display:none}
+.hint{font-size:13px;color:var(--muted);max-width:65ch}
+.drop{border:1.5px dashed var(--line);border-radius:6px;padding:18px;text-align:center;color:var(--muted);font-size:14px}
+.drop.on{border-color:var(--accent);color:var(--ink)}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.thumbs figure{margin:0;position:relative}
+.thumbs img{height:84px;border-radius:4px;border:1px solid var(--line);display:block}
+.thumbs button{position:absolute;top:2px;right:2px;font:600 12px var(--f-body);border:0;border-radius:4px;background:var(--panel);color:var(--ink);cursor:pointer;padding:2px 6px}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.stats{display:flex;flex-wrap:wrap;gap:18px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.stats b{font:600 18px var(--f-mono);color:var(--ink);font-variant-numeric:tabular-nums;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);padding:8px 14px;border-top:1px solid var(--line)}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--link);vertical-align:middle;margin-right:6px}
+.legend i.x{border-top:2px dashed var(--cross)}
+.legend s{display:inline-block;width:10px;height:10px;vertical-align:middle;margin-right:6px;text-decoration:none}
+.svgbox{overflow:auto;max-height:520px;background:var(--bg);border-radius:0 0 var(--r) var(--r)}
+svg.topo{display:block;width:100%;height:auto;min-height:260px}
+svg.topo text{font:500 9px var(--f-mono);fill:var(--muted)}
+.errs{margin:0;padding:12px 14px 12px 32px;background:var(--bad-bg);color:var(--bad);font-size:13px;border-radius:6px}
+.errs:empty{display:none}
+.out{padding:14px;display:flex;flex-direction:column;gap:12px}
+.status{font-size:13px;color:var(--muted);min-height:1.5em}
+.status.bad{color:var(--bad)}
+input[type=text]{font:14px var(--f-mono);padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:0;flex:1 1 180px}
+.models{font:12px/1.6 var(--f-mono);color:var(--muted);margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 14px}
+.models b{color:var(--ink);font-weight:500}
+@media (prefers-reduced-motion:no-preference){.btn{transition:filter .15s}.btn:hover:not(:disabled){filter:brightness(1.06)}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>PKT Сборщик<small>YAML или скриншот схемы → готовый файл Packet Tracer. Всё считается в браузере.</small></h1>
+    <div class="tpl">
+      <span>Шаблон:</span><span class="chip" id="tplName">—</span><span class="chip" id="tplVer">PT —</span>
+      <label class="btn" title="Любой .pkt/.pkz с нужными моделями устройств и хотя бы одним кабелем">Заменить шаблон<input type="file" id="tplFile" accept=".pkt,.pkz,.pka"></label>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-label="Описание схемы">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="t-yaml" aria-selected="true" aria-controls="p-yaml">YAML</button>
+        <button class="tab" role="tab" id="t-shot" aria-selected="false" aria-controls="p-shot">Со скриншота</button>
+        <button class="tab" role="tab" id="t-pkt" aria-selected="false" aria-controls="p-pkt">Из .pkt</button>
+      </div>
+      <div class="pane" id="p-yaml" role="tabpanel">
+        <textarea id="yaml" spellcheck="false" aria-label="YAML схемы"></textarea>
+        <p class="hint">Порты можно сокращать: Gi0/0, Fa0/1, Se0/0/0. Координаты x/y необязательны. Тип кабеля (прямой или кроссовер) выбирается сам. В <code>config</code> пишется обычный IOS: адреса, VLAN, OSPF/EIGRP/RIP, статика. Конфиг сохраняется и в startup-config; чтобы оставить его только в running, добавьте <code>save: false</code>.</p>
+      </div>
+      <div class="pane" id="p-shot" role="tabpanel" hidden>
+        <div class="drop" id="drop">Перетащите скриншоты схемы сюда или
+          <label class="btn" style="margin-left:6px">выберите файлы<input type="file" id="shotFile" accept="image/*" multiple></label></div>
+        <div class="thumbs" id="thumbs"></div>
+        <p class="hint">Большую схему лучше дать несколькими фрагментами с перекрытием: каждое изображение ужимается примерно до 1,2 Мп, и мелкие подписи портов на одном общем снимке теряются.</p>
+        <div class="row">
+          <button class="btn primary" id="recog" disabled>Распознать в YAML</button>
+          <button class="btn" id="stop" hidden>Остановить</button>
+        </div>
+        <div class="status" id="shotStatus"></div>
+      </div>
+      <div class="pane" id="p-pkt" role="tabpanel" hidden>
+        <label class="btn">Открыть .pkt / .pkz<input type="file" id="pktFile" accept=".pkt,.pkz,.pka"></label>
+        <p class="hint">Готовая схема разбирается обратно в YAML: устройства, координаты, IP оконечных устройств, значимые строки конфигов и кабели. Её можно поправить и собрать заново.</p>
+        <div class="status" id="pktStatus"></div>
+      </div>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-label="Предпросмотр">
+        <div class="stats">
+          <div><b id="sDev">0</b>устройств</div>
+          <div><b id="sLink">0</b>кабелей</div>
+          <div><b id="sCross">0</b>кроссоверов</div>
+        </div>
+        <div class="svgbox"><svg class="topo" id="svg" role="img" aria-label="Схема топологии"></svg></div>
+        <div class="legend">
+          <span><s style="background:var(--node-r);border-radius:50%"></s>маршрутизатор</span>
+          <span><s style="background:var(--node-s)"></s>коммутатор</span>
+          <span><s style="background:var(--node-h);border-radius:2px;transform:scale(.7)"></s>хост</span>
+          <span><i></i>прямой</span><span><i class="x"></i>кроссовер</span>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Сборка файла">
+        <div class="out">
+          <ul class="errs" id="errs"></ul>
+          <div class="row">
+            <input type="text" id="fname" value="topology" aria-label="Имя файла">
+            <button class="btn primary" id="buildBtn">Собрать .pkt</button>
+          </div>
+          <div class="status" id="buildStatus"></div>
+          <p class="hint" id="zipHint" hidden>Файл придёт в .zip: прямое скачивание .pkt со страницы недоступно. Внутри лежит готовый .pkt.</p>
+          <details>
+            <summary class="hint" style="cursor:pointer">Модели в шаблоне</summary>
+            <ul class="models" id="models"></ul>
+          </details>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<script>/*PTCORE*/</script>
+<script>
+const TEMPLATE_B64 = "/*TEMPLATE_B64*/";
+const EXAMPLE = `# Пример: роутер, ядро, два коммутатора доступа и шесть ПК
+devices:
+  - name: R1
+    model: "1941"
+    config: |
+      interface GigabitEthernet0/0
+       ip address 10.0.0.1 255.255.0.0
+       no shutdown
+  - {name: SW-CORE, model: 2960-24TT}
+  - {name: SW1, model: 2960-24TT}
+  - {name: SW2, model: 2960-24TT}
+  - {name: PC1, model: PC-PT, ip: 10.0.1.10/16, gateway: 10.0.0.1}
+  - {name: PC2, model: PC-PT, ip: 10.0.1.11/16, gateway: 10.0.0.1}
+  - {name: PC3, model: PC-PT, ip: 10.0.1.12/16, gateway: 10.0.0.1}
+  - {name: PC4, model: PC-PT, ip: 10.0.2.10/16, gateway: 10.0.0.1}
+  - {name: PC5, model: PC-PT, ip: 10.0.2.11/16, gateway: 10.0.0.1}
+  - {name: PC6, model: PC-PT, ip: 10.0.2.12/16, gateway: 10.0.0.1}
+links:
+  - [R1, Gi0/0, SW-CORE, Gi0/1]
+  - [SW-CORE, Fa0/1, SW1, Gi0/1]
+  - [SW-CORE, Fa0/2, SW2, Gi0/1]
+  - [PC1, Fa0, SW1, Fa0/1]
+  - [PC2, Fa0, SW1, Fa0/2]
+  - [PC3, Fa0, SW1, Fa0/3]
+  - [PC4, Fa0, SW2, Fa0/1]
+  - [PC5, Fa0, SW2, Fa0/2]
+  - [PC6, Fa0, SW2, Fa0/3]
+`;
+const $ = (id) => document.getElementById(id);
+const P = window.PTCore;
+let tpl = { raw: Uint8Array.from(atob(TEMPLATE_B64), c => c.charCodeAt(0)), name: "template_plus.pkt" };
+let modelTypes = {}, modelList = [], portsOf = {};
+
+function loadTemplate(raw, name) {
+  const ver = P.version(raw), ms = P.models(raw);
+  tpl = { raw, name }; modelList = ms; modelTypes = Object.fromEntries(ms.map(m => [m.model, m.type])); portsOf = Object.fromEntries(ms.map(m => [m.model, m.ports]));
+  $("tplName").textContent = name; $("tplVer").textContent = "PT " + ver;
+  const ul = $("models"); ul.replaceChildren(...ms.map(m => { const li = document.createElement("li");
+    const b = document.createElement("b"); b.textContent = m.model; li.append(b, " · " + m.type + (m.ports.length ? " · " + m.ports.length + " портов" : "")); li.title = m.ports.join(", "); return li; }));
+  refresh();
+}
+
+// ---------- предпросмотр ----------
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
+function draw(ins) {
+  const svg = $("svg"); svg.replaceChildren();
+  $("sDev").textContent = ins.nodes.length; $("sLink").textContent = ins.links.length;
+  $("sCross").textContent = ins.links.filter(l => l.cross).length;
+  if (!ins.nodes.length) { svg.setAttribute("viewBox", "0 0 400 120");
+    const t = el("text", { x: 200, y: 64, "text-anchor": "middle" }, svg); t.textContent = "Здесь появится схема"; return; }
+  const xs = ins.nodes.map(n => n.x), ys = ins.nodes.map(n => n.y), pad = 40;
+  const x0 = Math.min(...xs) - pad, y0 = Math.min(...ys) - pad, w = Math.max(...xs) - x0 + pad, hgt = Math.max(...ys) - y0 + pad + 10;
+  svg.setAttribute("viewBox", `${x0} ${y0} ${Math.max(w, 200)} ${Math.max(hgt, 120)}`);
+  const pos = Object.fromEntries(ins.nodes.map(n => [n.name, n]));
+  const big = ins.nodes.length > 60;
+  for (const l of ins.links) { const a = pos[l.a], b = pos[l.b];
+    const ln = el("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: l.cross ? "var(--cross)" : "var(--link)",
+      "stroke-width": big ? 1 : 1.6, "stroke-dasharray": l.cross ? "4 3" : "none" }, svg);
+    el("title", {}, ln).textContent = `${l.a} ${l.pa} — ${l.b} ${l.pb}`; }
+  for (const n of ins.nodes) {
+    const g = el("g", {}, svg); el("title", {}, g).textContent = `${n.name} · ${n.model}`;
+    if (n.type === "router") el("circle", { cx: n.x, cy: n.y, r: 11, fill: "var(--node-r)" }, g);
+    else if (/switch|hub/.test(n.type)) el("rect", { x: n.x - 12, y: n.y - 8, width: 24, height: 16, rx: 2, fill: "var(--node-s)" }, g);
+    else el("rect", { x: n.x - 6, y: n.y - 6, width: 12, height: 12, rx: 2, fill: "var(--node-h)" }, g);
+    if (!big || n.type === "router" || /switch/.test(n.type)) {
+      const t = el("text", { x: n.x, y: n.y + 22, "text-anchor": "middle" }, g); t.textContent = n.name; }
+  }
+}
+
+let topo = null, ins = { errors: [], nodes: [], links: [] };
+function refresh() {
+  const errs = $("errs"); errs.replaceChildren();
+  try { topo = P.parseYaml($("yaml").value); ins = P.inspect(topo, modelTypes, portsOf); }
+  catch (e) { topo = null; ins = { errors: ["YAML не разбирается: " + (e.reason || e.message) + (e.mark ? ` (строка ${e.mark.line + 1})` : "")], nodes: [], links: [] }; }
+  for (const m of ins.errors.slice(0, 30)) { const li = document.createElement("li"); li.textContent = m; errs.appendChild(li); }
+  if (ins.errors.length > 30) { const li = document.createElement("li"); li.textContent = `…и ещё ${ins.errors.length - 30}`; errs.appendChild(li); }
+  $("buildBtn").disabled = !topo || ins.errors.length > 0 || !ins.nodes.length;
+  draw(ins);
+  try { localStorage.setItem("pkt-yaml", $("yaml").value); } catch (e) {}
+}
+let tm; $("yaml").addEventListener("input", () => { clearTimeout(tm); tm = setTimeout(refresh, 250); });
+
+// ---------- вкладки ----------
+const tabs = ["yaml", "shot", "pkt"];
+function showTab(k) { for (const t of tabs) { $("t-" + t).setAttribute("aria-selected", t === k); $("p-" + t).hidden = t !== k; } }
+tabs.forEach(t => $("t-" + t).addEventListener("click", () => showTab(t)));
+
+// ---------- шаблон ----------
+$("tplFile").addEventListener("change", async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { loadTemplate(new Uint8Array(await f.arrayBuffer()), f.name); $("buildStatus").textContent = "Шаблон заменён: " + f.name; $("buildStatus").className = "status"; }
+  catch (err) { $("buildStatus").textContent = "Не удалось прочитать шаблон: " + err.message; $("buildStatus").className = "status bad"; }
+  e.target.value = "";
+});
+
+// ---------- сборка ----------
+let downloads = null;
+$("buildBtn").addEventListener("click", async () => {
+  const st = $("buildStatus"); st.className = "status";
+  const standalone = !window.claude;
+  if (!downloads && !standalone) { st.textContent = "Скачивание недоступно в этом окне."; st.className = "status bad"; return; }
+  $("buildBtn").disabled = true; st.textContent = "Собираю…";
+  await new Promise(r => setTimeout(r, 20));
+  try {
+    const t0 = performance.now();
+    const r = P.build(topo, tpl.raw);
+    const name = ($("fname").value.trim() || "topology").replace(/[\\/:*?"<>|]+/g, "_").replace(/\.pkt$/i, "");
+    if (standalone) {  // обычный сайт: отдаём .pkt напрямую
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([r.pkt], { type: "application/octet-stream" }));
+      a.download = name + ".pkt"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      st.textContent = `Скачано: ${name}.pkt (${r.devices} устройств, ${r.links} кабелей, ${Math.round(performance.now() - t0)} мс).`;
+      return;
+    }
+    const zip = P.makeZip([{ name: name + ".pkt", data: r.pkt }]);
+    st.textContent = `Собрано за ${Math.round(performance.now() - t0)} мс: ${r.devices} устройств, ${r.links} кабелей. Подтвердите сохранение.`;
+    await downloads.save({ filename: name + ".zip", data: new Blob([zip]) });
+    st.textContent = `Сохранено: ${name}.zip (${r.devices} устройств, ${r.links} кабелей).`;
+  } catch (e) {
+    if (e && e.code === "declined") st.textContent = "Сохранение отменено.";
+    else if (e && e.code === "rate_limited") st.textContent = "Окно сохранения уже открыто.";
+    else { st.textContent = "Ошибка: " + (e.message || e.code) + (e.details ? " — " + e.details.join("; ") : ""); st.className = "status bad"; }
+  } finally { $("buildBtn").disabled = !topo || ins.errors.length > 0; }
+});
+
+// ---------- из .pkt ----------
+$("pktFile").addEventListener("change", async (e) => {
+  const f = e.target.files[0], st = $("pktStatus"); if (!f) return;
+  try { const t = P.exportTopo(new Uint8Array(await f.arrayBuffer()));
+    $("yaml").value = `# Из файла ${f.name}\n` + P.toYaml(t); refresh(); showTab("yaml");
+    st.textContent = `Разобрано: ${t.devices.length} устройств, ${t.links.length} кабелей.`; st.className = "status"; }
+  catch (err) { st.textContent = "Не удалось разобрать файл: " + err.message; st.className = "status bad"; }
+  e.target.value = "";
+});
+
+// ---------- со скриншота ----------
+let sample = null, shots = [], ctl = null;
+function renderThumbs() {
+  const box = $("thumbs"); box.replaceChildren();
+  shots.forEach((f, i) => { const fig = document.createElement("figure"), img = document.createElement("img"), b = document.createElement("button");
+    img.src = URL.createObjectURL(f); img.alt = f.name; b.textContent = "×"; b.setAttribute("aria-label", "Убрать " + f.name);
+    b.onclick = () => { shots.splice(i, 1); renderThumbs(); }; fig.append(img, b); box.appendChild(fig); });
+  $("recog").disabled = !sample || !shots.length;
+}
+function addShots(list) { for (const f of list) if (f.type.startsWith("image/")) shots.push(f); renderThumbs(); }
+$("shotFile").addEventListener("change", (e) => { addShots(e.target.files); e.target.value = ""; });
+const drop = $("drop");
+drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("on"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("on"));
+drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("on"); addShots(e.dataTransfer.files); });
+document.addEventListener("paste", (e) => { if ($("p-shot").hidden) return; const fs = [...e.clipboardData.files]; if (fs.length) addShots(fs); });
+
+function prompt() {
+  const models = modelList.map(m => `- ${m.model} (${m.type})` + (m.ports ? `: порты ${m.ports.join(", ")}` : "")).join("\n");
+  return `На изображениях — схема сети из Cisco Packet Tracer (или её фрагменты с перекрытием). Восстанови её как YAML для генератора .pkt.
+
+Доступные модели устройств (используй ТОЛЬКО их; если на схеме другая модель, выбери ближайшую по роли):
+${models}
+
+Формат ответа — только YAML, без пояснений и без \`\`\`:
+devices:
+  - {name: R1, model: "1941", x: 400, y: 100}
+  - {name: PC1, model: PC-PT, x: 120, y: 420, ip: 10.0.0.10/24, gateway: 10.0.0.1}
+links:
+  - [R1, GigabitEthernet0/0, SW1, GigabitEthernet0/1]
+
+Правила:
+- name — подпись устройства как на схеме; одно устройство на нескольких фрагментах описывай один раз.
+- x, y — примерное положение на общей схеме в пикселях, диапазон 0–1600 по x и 0–1000 по y.
+- ip/gateway указывай только если подписаны на схеме для хоста; для роутеров/коммутаторов всё, что видно на схеме или в подписях (адреса интерфейсов, VLAN, маршрутизация), пиши в поле config в синтаксисе IOS (interface …, ip address A M, no shutdown; router ospf …; ip route …).
+- Порты бери с подписей у кабелей. Если подписи не видно, назначь свободный порт подходящей модели по порядку и добавь в конец строки комментарий "  # порт не виден".
+- Не используй один порт дважды. Каждая линия между устройствами — отдельный link.`;
+}
+$("recog").addEventListener("click", async () => {
+  const st = $("shotStatus"); st.className = "status"; st.textContent = "Думаю… для большой схемы это может занять минуту-две.";
+  $("recog").disabled = true; $("stop").hidden = false; ctl = new AbortController();
+  const ta = $("yaml"); const before = ta.value; showTab("yaml");
+  try {
+    const { text, truncated } = await sample(prompt(), { images: shots, modelTier: "complex", signal: ctl.signal,
+      onText: ({ text }) => { ta.value = text; st.textContent = "Пишу YAML…"; } });
+    ta.value = text.replace(/^\s*```(?:ya?ml)?\s*\n?/i, "").replace(/\n?```\s*$/, "") + "\n";
+    refresh(); showTab("shot");
+    st.textContent = (truncated ? "Ответ обрезан — разбейте схему на меньшие фрагменты. " : "") +
+      `Готово: ${ins.nodes.length} устройств, ${ins.links.length} кабелей. Проверьте строки с пометкой «порт не виден» на вкладке YAML.`;
+  } catch (e) {
+    if (e.code === "cancelled") { ta.value = e.text || before; st.textContent = "Остановлено."; }
+    else { ta.value = before; st.className = "status bad";
+      st.textContent = e.code === "not_granted" ? "Распознавание не разрешено для этой страницы." :
+        e.code === "rate_limited" ? "Слишком много запросов подряд, подождите немного." :
+        e.code === "image_rejected" ? "Одно из изображений не подошло (тип или размер)." :
+        "Не получилось распознать: " + (e.message || e.code); }
+    refresh();
+  } finally { $("stop").hidden = true; $("recog").disabled = !shots.length; }
+});
+$("stop").addEventListener("click", () => ctl && ctl.abort());
+
+// ---------- старт ----------
+let saved = null; try { saved = localStorage.getItem("pkt-yaml"); } catch (e) {}
+$("yaml").value = saved || EXAMPLE;
+try { loadTemplate(tpl.raw, tpl.name); } catch (e) { $("buildStatus").textContent = "Встроенный шаблон не читается: " + e.message; $("buildStatus").className = "status bad"; }
+
+(async () => {
+  if (!window.claude) { $("t-shot").hidden = true; return; }
+  $("zipHint").hidden = false;
+  claude.use("downloads").then(d => { downloads = d; if (!d) { $("buildStatus").textContent = "Скачивание в этом окне недоступно."; } });
+  const s = await claude.use("sample");
+  const lim = s && await s.limits().catch(() => null);
+  if (!s || !lim || !lim.images) { $("t-shot").hidden = true; return; }
+  sample = s; $("shotFile").accept = lim.images.mediaTypes.join(","); renderThumbs();
+})();
+</script>

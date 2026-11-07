@@ -1,0 +1,36 @@
+# Схема со скриншота. Подписей портов на картинке нет — порты назначены по порядку.
+devices:
+  - {name: Router1, model: "1941", x: 402, y: 40}
+  - {name: Router0, model: "1941", x: 225, y: 140}
+  - {name: Router2, model: "1941", x: 553, y: 128}
+  - {name: Multilayer Switch0, model: 3560-24PS, x: 555, y: 215}
+  - {name: Switch0, model: 2960-24TT, x: 118, y: 235}
+  - {name: Switch1, model: 2960-24TT, x: 775, y: 265}
+  - {name: Switch2, model: 2960-24TT, x: 400, y: 350}
+  - {name: Switch3, model: 2960-24TT, x: 663, y: 350}
+  - {name: PC4, model: PC-PT, x: 35, y: 345}
+  - {name: PC5, model: PC-PT, x: 105, y: 340}
+  - {name: PC6, model: PC-PT, x: 183, y: 345}
+  - {name: PC0, model: PC-PT, x: 325, y: 440}
+  - {name: PC1, model: PC-PT, x: 400, y: 440}
+  - {name: PC2, model: PC-PT, x: 593, y: 425}
+  - {name: PC3, model: PC-PT, x: 710, y: 430}
+  - {name: Server0, model: Server-PT, x: 855, y: 195}
+  - {name: Server1, model: Server-PT, x: 852, y: 300}
+links:
+  - [Router1, Gi0/0, Router0, Gi0/0]
+  - [Router1, Gi0/1, Router2, Gi0/0]
+  - [Router0, Gi0/1, Switch0, Gi0/1]
+  - [Router2, Gi0/1, Multilayer Switch0, Gi0/1]
+  - [Multilayer Switch0, Fa0/1, Switch2, Gi0/1]
+  - [Multilayer Switch0, Fa0/2, Switch3, Gi0/1]
+  - [Multilayer Switch0, Fa0/3, Switch1, Gi0/1]
+  - [Switch0, Fa0/1, PC4, Fa0]
+  - [Switch0, Fa0/2, PC5, Fa0]
+  - [Switch0, Fa0/3, PC6, Fa0]
+  - [Switch2, Fa0/1, PC0, Fa0]
+  - [Switch2, Fa0/2, PC1, Fa0]
+  - [Switch3, Fa0/1, PC2, Fa0]
+  - [Switch3, Fa0/2, PC3, Fa0]
+  - [Switch1, Fa0/1, Server0, Fa0]
+  - [Switch1, Fa0/2, Server1, Fa0]

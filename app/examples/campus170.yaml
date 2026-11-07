@@ -1,0 +1,341 @@
+devices:
+- {name: R1, model: '1941', config: "interface GigabitEthernet0/0\n ip address 10.0.0.1 255.255.0.0\n no shutdown\n"}
+- {name: SW-CORE, model: 2960-24TT}
+- {name: SW1, model: 2960-24TT}
+- {name: PC1-1, model: PC-PT, ip: 10.0.1.10/16, gateway: 10.0.0.1}
+- {name: PC1-2, model: PC-PT, ip: 10.0.1.11/16, gateway: 10.0.0.1}
+- {name: PC1-3, model: PC-PT, ip: 10.0.1.12/16, gateway: 10.0.0.1}
+- {name: PC1-4, model: PC-PT, ip: 10.0.1.13/16, gateway: 10.0.0.1}
+- {name: PC1-5, model: PC-PT, ip: 10.0.1.14/16, gateway: 10.0.0.1}
+- {name: PC1-6, model: PC-PT, ip: 10.0.1.15/16, gateway: 10.0.0.1}
+- {name: PC1-7, model: PC-PT, ip: 10.0.1.16/16, gateway: 10.0.0.1}
+- {name: PC1-8, model: PC-PT, ip: 10.0.1.17/16, gateway: 10.0.0.1}
+- {name: PC1-9, model: PC-PT, ip: 10.0.1.18/16, gateway: 10.0.0.1}
+- {name: PC1-10, model: PC-PT, ip: 10.0.1.19/16, gateway: 10.0.0.1}
+- {name: PC1-11, model: PC-PT, ip: 10.0.1.20/16, gateway: 10.0.0.1}
+- {name: PC1-12, model: PC-PT, ip: 10.0.1.21/16, gateway: 10.0.0.1}
+- {name: PC1-13, model: PC-PT, ip: 10.0.1.22/16, gateway: 10.0.0.1}
+- {name: PC1-14, model: PC-PT, ip: 10.0.1.23/16, gateway: 10.0.0.1}
+- {name: PC1-15, model: PC-PT, ip: 10.0.1.24/16, gateway: 10.0.0.1}
+- {name: PC1-16, model: PC-PT, ip: 10.0.1.25/16, gateway: 10.0.0.1}
+- {name: PC1-17, model: PC-PT, ip: 10.0.1.26/16, gateway: 10.0.0.1}
+- {name: PC1-18, model: PC-PT, ip: 10.0.1.27/16, gateway: 10.0.0.1}
+- {name: PC1-19, model: PC-PT, ip: 10.0.1.28/16, gateway: 10.0.0.1}
+- {name: PC1-20, model: PC-PT, ip: 10.0.1.29/16, gateway: 10.0.0.1}
+- {name: SW2, model: 2960-24TT}
+- {name: PC2-1, model: PC-PT, ip: 10.0.2.10/16, gateway: 10.0.0.1}
+- {name: PC2-2, model: PC-PT, ip: 10.0.2.11/16, gateway: 10.0.0.1}
+- {name: PC2-3, model: PC-PT, ip: 10.0.2.12/16, gateway: 10.0.0.1}
+- {name: PC2-4, model: PC-PT, ip: 10.0.2.13/16, gateway: 10.0.0.1}
+- {name: PC2-5, model: PC-PT, ip: 10.0.2.14/16, gateway: 10.0.0.1}
+- {name: PC2-6, model: PC-PT, ip: 10.0.2.15/16, gateway: 10.0.0.1}
+- {name: PC2-7, model: PC-PT, ip: 10.0.2.16/16, gateway: 10.0.0.1}
+- {name: PC2-8, model: PC-PT, ip: 10.0.2.17/16, gateway: 10.0.0.1}
+- {name: PC2-9, model: PC-PT, ip: 10.0.2.18/16, gateway: 10.0.0.1}
+- {name: PC2-10, model: PC-PT, ip: 10.0.2.19/16, gateway: 10.0.0.1}
+- {name: PC2-11, model: PC-PT, ip: 10.0.2.20/16, gateway: 10.0.0.1}
+- {name: PC2-12, model: PC-PT, ip: 10.0.2.21/16, gateway: 10.0.0.1}
+- {name: PC2-13, model: PC-PT, ip: 10.0.2.22/16, gateway: 10.0.0.1}
+- {name: PC2-14, model: PC-PT, ip: 10.0.2.23/16, gateway: 10.0.0.1}
+- {name: PC2-15, model: PC-PT, ip: 10.0.2.24/16, gateway: 10.0.0.1}
+- {name: PC2-16, model: PC-PT, ip: 10.0.2.25/16, gateway: 10.0.0.1}
+- {name: PC2-17, model: PC-PT, ip: 10.0.2.26/16, gateway: 10.0.0.1}
+- {name: PC2-18, model: PC-PT, ip: 10.0.2.27/16, gateway: 10.0.0.1}
+- {name: PC2-19, model: PC-PT, ip: 10.0.2.28/16, gateway: 10.0.0.1}
+- {name: PC2-20, model: PC-PT, ip: 10.0.2.29/16, gateway: 10.0.0.1}
+- {name: SW3, model: 2960-24TT}
+- {name: PC3-1, model: PC-PT, ip: 10.0.3.10/16, gateway: 10.0.0.1}
+- {name: PC3-2, model: PC-PT, ip: 10.0.3.11/16, gateway: 10.0.0.1}
+- {name: PC3-3, model: PC-PT, ip: 10.0.3.12/16, gateway: 10.0.0.1}
+- {name: PC3-4, model: PC-PT, ip: 10.0.3.13/16, gateway: 10.0.0.1}
+- {name: PC3-5, model: PC-PT, ip: 10.0.3.14/16, gateway: 10.0.0.1}
+- {name: PC3-6, model: PC-PT, ip: 10.0.3.15/16, gateway: 10.0.0.1}
+- {name: PC3-7, model: PC-PT, ip: 10.0.3.16/16, gateway: 10.0.0.1}
+- {name: PC3-8, model: PC-PT, ip: 10.0.3.17/16, gateway: 10.0.0.1}
+- {name: PC3-9, model: PC-PT, ip: 10.0.3.18/16, gateway: 10.0.0.1}
+- {name: PC3-10, model: PC-PT, ip: 10.0.3.19/16, gateway: 10.0.0.1}
+- {name: PC3-11, model: PC-PT, ip: 10.0.3.20/16, gateway: 10.0.0.1}
+- {name: PC3-12, model: PC-PT, ip: 10.0.3.21/16, gateway: 10.0.0.1}
+- {name: PC3-13, model: PC-PT, ip: 10.0.3.22/16, gateway: 10.0.0.1}
+- {name: PC3-14, model: PC-PT, ip: 10.0.3.23/16, gateway: 10.0.0.1}
+- {name: PC3-15, model: PC-PT, ip: 10.0.3.24/16, gateway: 10.0.0.1}
+- {name: PC3-16, model: PC-PT, ip: 10.0.3.25/16, gateway: 10.0.0.1}
+- {name: PC3-17, model: PC-PT, ip: 10.0.3.26/16, gateway: 10.0.0.1}
+- {name: PC3-18, model: PC-PT, ip: 10.0.3.27/16, gateway: 10.0.0.1}
+- {name: PC3-19, model: PC-PT, ip: 10.0.3.28/16, gateway: 10.0.0.1}
+- {name: PC3-20, model: PC-PT, ip: 10.0.3.29/16, gateway: 10.0.0.1}
+- {name: SW4, model: 2960-24TT}
+- {name: PC4-1, model: PC-PT, ip: 10.0.4.10/16, gateway: 10.0.0.1}
+- {name: PC4-2, model: PC-PT, ip: 10.0.4.11/16, gateway: 10.0.0.1}
+- {name: PC4-3, model: PC-PT, ip: 10.0.4.12/16, gateway: 10.0.0.1}
+- {name: PC4-4, model: PC-PT, ip: 10.0.4.13/16, gateway: 10.0.0.1}
+- {name: PC4-5, model: PC-PT, ip: 10.0.4.14/16, gateway: 10.0.0.1}
+- {name: PC4-6, model: PC-PT, ip: 10.0.4.15/16, gateway: 10.0.0.1}
+- {name: PC4-7, model: PC-PT, ip: 10.0.4.16/16, gateway: 10.0.0.1}
+- {name: PC4-8, model: PC-PT, ip: 10.0.4.17/16, gateway: 10.0.0.1}
+- {name: PC4-9, model: PC-PT, ip: 10.0.4.18/16, gateway: 10.0.0.1}
+- {name: PC4-10, model: PC-PT, ip: 10.0.4.19/16, gateway: 10.0.0.1}
+- {name: PC4-11, model: PC-PT, ip: 10.0.4.20/16, gateway: 10.0.0.1}
+- {name: PC4-12, model: PC-PT, ip: 10.0.4.21/16, gateway: 10.0.0.1}
+- {name: PC4-13, model: PC-PT, ip: 10.0.4.22/16, gateway: 10.0.0.1}
+- {name: PC4-14, model: PC-PT, ip: 10.0.4.23/16, gateway: 10.0.0.1}
+- {name: PC4-15, model: PC-PT, ip: 10.0.4.24/16, gateway: 10.0.0.1}
+- {name: PC4-16, model: PC-PT, ip: 10.0.4.25/16, gateway: 10.0.0.1}
+- {name: PC4-17, model: PC-PT, ip: 10.0.4.26/16, gateway: 10.0.0.1}
+- {name: PC4-18, model: PC-PT, ip: 10.0.4.27/16, gateway: 10.0.0.1}
+- {name: PC4-19, model: PC-PT, ip: 10.0.4.28/16, gateway: 10.0.0.1}
+- {name: PC4-20, model: PC-PT, ip: 10.0.4.29/16, gateway: 10.0.0.1}
+- {name: SW5, model: 2960-24TT}
+- {name: PC5-1, model: PC-PT, ip: 10.0.5.10/16, gateway: 10.0.0.1}
+- {name: PC5-2, model: PC-PT, ip: 10.0.5.11/16, gateway: 10.0.0.1}
+- {name: PC5-3, model: PC-PT, ip: 10.0.5.12/16, gateway: 10.0.0.1}
+- {name: PC5-4, model: PC-PT, ip: 10.0.5.13/16, gateway: 10.0.0.1}
+- {name: PC5-5, model: PC-PT, ip: 10.0.5.14/16, gateway: 10.0.0.1}
+- {name: PC5-6, model: PC-PT, ip: 10.0.5.15/16, gateway: 10.0.0.1}
+- {name: PC5-7, model: PC-PT, ip: 10.0.5.16/16, gateway: 10.0.0.1}
+- {name: PC5-8, model: PC-PT, ip: 10.0.5.17/16, gateway: 10.0.0.1}
+- {name: PC5-9, model: PC-PT, ip: 10.0.5.18/16, gateway: 10.0.0.1}
+- {name: PC5-10, model: PC-PT, ip: 10.0.5.19/16, gateway: 10.0.0.1}
+- {name: PC5-11, model: PC-PT, ip: 10.0.5.20/16, gateway: 10.0.0.1}
+- {name: PC5-12, model: PC-PT, ip: 10.0.5.21/16, gateway: 10.0.0.1}
+- {name: PC5-13, model: PC-PT, ip: 10.0.5.22/16, gateway: 10.0.0.1}
+- {name: PC5-14, model: PC-PT, ip: 10.0.5.23/16, gateway: 10.0.0.1}
+- {name: PC5-15, model: PC-PT, ip: 10.0.5.24/16, gateway: 10.0.0.1}
+- {name: PC5-16, model: PC-PT, ip: 10.0.5.25/16, gateway: 10.0.0.1}
+- {name: PC5-17, model: PC-PT, ip: 10.0.5.26/16, gateway: 10.0.0.1}
+- {name: PC5-18, model: PC-PT, ip: 10.0.5.27/16, gateway: 10.0.0.1}
+- {name: PC5-19, model: PC-PT, ip: 10.0.5.28/16, gateway: 10.0.0.1}
+- {name: PC5-20, model: PC-PT, ip: 10.0.5.29/16, gateway: 10.0.0.1}
+- {name: SW6, model: 2960-24TT}
+- {name: PC6-1, model: PC-PT, ip: 10.0.6.10/16, gateway: 10.0.0.1}
+- {name: PC6-2, model: PC-PT, ip: 10.0.6.11/16, gateway: 10.0.0.1}
+- {name: PC6-3, model: PC-PT, ip: 10.0.6.12/16, gateway: 10.0.0.1}
+- {name: PC6-4, model: PC-PT, ip: 10.0.6.13/16, gateway: 10.0.0.1}
+- {name: PC6-5, model: PC-PT, ip: 10.0.6.14/16, gateway: 10.0.0.1}
+- {name: PC6-6, model: PC-PT, ip: 10.0.6.15/16, gateway: 10.0.0.1}
+- {name: PC6-7, model: PC-PT, ip: 10.0.6.16/16, gateway: 10.0.0.1}
+- {name: PC6-8, model: PC-PT, ip: 10.0.6.17/16, gateway: 10.0.0.1}
+- {name: PC6-9, model: PC-PT, ip: 10.0.6.18/16, gateway: 10.0.0.1}
+- {name: PC6-10, model: PC-PT, ip: 10.0.6.19/16, gateway: 10.0.0.1}
+- {name: PC6-11, model: PC-PT, ip: 10.0.6.20/16, gateway: 10.0.0.1}
+- {name: PC6-12, model: PC-PT, ip: 10.0.6.21/16, gateway: 10.0.0.1}
+- {name: PC6-13, model: PC-PT, ip: 10.0.6.22/16, gateway: 10.0.0.1}
+- {name: PC6-14, model: PC-PT, ip: 10.0.6.23/16, gateway: 10.0.0.1}
+- {name: PC6-15, model: PC-PT, ip: 10.0.6.24/16, gateway: 10.0.0.1}
+- {name: PC6-16, model: PC-PT, ip: 10.0.6.25/16, gateway: 10.0.0.1}
+- {name: PC6-17, model: PC-PT, ip: 10.0.6.26/16, gateway: 10.0.0.1}
+- {name: PC6-18, model: PC-PT, ip: 10.0.6.27/16, gateway: 10.0.0.1}
+- {name: PC6-19, model: PC-PT, ip: 10.0.6.28/16, gateway: 10.0.0.1}
+- {name: PC6-20, model: PC-PT, ip: 10.0.6.29/16, gateway: 10.0.0.1}
+- {name: SW7, model: 2960-24TT}
+- {name: PC7-1, model: PC-PT, ip: 10.0.7.10/16, gateway: 10.0.0.1}
+- {name: PC7-2, model: PC-PT, ip: 10.0.7.11/16, gateway: 10.0.0.1}
+- {name: PC7-3, model: PC-PT, ip: 10.0.7.12/16, gateway: 10.0.0.1}
+- {name: PC7-4, model: PC-PT, ip: 10.0.7.13/16, gateway: 10.0.0.1}
+- {name: PC7-5, model: PC-PT, ip: 10.0.7.14/16, gateway: 10.0.0.1}
+- {name: PC7-6, model: PC-PT, ip: 10.0.7.15/16, gateway: 10.0.0.1}
+- {name: PC7-7, model: PC-PT, ip: 10.0.7.16/16, gateway: 10.0.0.1}
+- {name: PC7-8, model: PC-PT, ip: 10.0.7.17/16, gateway: 10.0.0.1}
+- {name: PC7-9, model: PC-PT, ip: 10.0.7.18/16, gateway: 10.0.0.1}
+- {name: PC7-10, model: PC-PT, ip: 10.0.7.19/16, gateway: 10.0.0.1}
+- {name: PC7-11, model: PC-PT, ip: 10.0.7.20/16, gateway: 10.0.0.1}
+- {name: PC7-12, model: PC-PT, ip: 10.0.7.21/16, gateway: 10.0.0.1}
+- {name: PC7-13, model: PC-PT, ip: 10.0.7.22/16, gateway: 10.0.0.1}
+- {name: PC7-14, model: PC-PT, ip: 10.0.7.23/16, gateway: 10.0.0.1}
+- {name: PC7-15, model: PC-PT, ip: 10.0.7.24/16, gateway: 10.0.0.1}
+- {name: PC7-16, model: PC-PT, ip: 10.0.7.25/16, gateway: 10.0.0.1}
+- {name: PC7-17, model: PC-PT, ip: 10.0.7.26/16, gateway: 10.0.0.1}
+- {name: PC7-18, model: PC-PT, ip: 10.0.7.27/16, gateway: 10.0.0.1}
+- {name: PC7-19, model: PC-PT, ip: 10.0.7.28/16, gateway: 10.0.0.1}
+- {name: PC7-20, model: PC-PT, ip: 10.0.7.29/16, gateway: 10.0.0.1}
+- {name: SW8, model: 2960-24TT}
+- {name: PC8-1, model: PC-PT, ip: 10.0.8.10/16, gateway: 10.0.0.1}
+- {name: PC8-2, model: PC-PT, ip: 10.0.8.11/16, gateway: 10.0.0.1}
+- {name: PC8-3, model: PC-PT, ip: 10.0.8.12/16, gateway: 10.0.0.1}
+- {name: PC8-4, model: PC-PT, ip: 10.0.8.13/16, gateway: 10.0.0.1}
+- {name: PC8-5, model: PC-PT, ip: 10.0.8.14/16, gateway: 10.0.0.1}
+- {name: PC8-6, model: PC-PT, ip: 10.0.8.15/16, gateway: 10.0.0.1}
+- {name: PC8-7, model: PC-PT, ip: 10.0.8.16/16, gateway: 10.0.0.1}
+- {name: PC8-8, model: PC-PT, ip: 10.0.8.17/16, gateway: 10.0.0.1}
+- {name: PC8-9, model: PC-PT, ip: 10.0.8.18/16, gateway: 10.0.0.1}
+- {name: PC8-10, model: PC-PT, ip: 10.0.8.19/16, gateway: 10.0.0.1}
+- {name: PC8-11, model: PC-PT, ip: 10.0.8.20/16, gateway: 10.0.0.1}
+- {name: PC8-12, model: PC-PT, ip: 10.0.8.21/16, gateway: 10.0.0.1}
+- {name: PC8-13, model: PC-PT, ip: 10.0.8.22/16, gateway: 10.0.0.1}
+- {name: PC8-14, model: PC-PT, ip: 10.0.8.23/16, gateway: 10.0.0.1}
+- {name: PC8-15, model: PC-PT, ip: 10.0.8.24/16, gateway: 10.0.0.1}
+- {name: PC8-16, model: PC-PT, ip: 10.0.8.25/16, gateway: 10.0.0.1}
+- {name: PC8-17, model: PC-PT, ip: 10.0.8.26/16, gateway: 10.0.0.1}
+- {name: PC8-18, model: PC-PT, ip: 10.0.8.27/16, gateway: 10.0.0.1}
+- {name: PC8-19, model: PC-PT, ip: 10.0.8.28/16, gateway: 10.0.0.1}
+- {name: PC8-20, model: PC-PT, ip: 10.0.8.29/16, gateway: 10.0.0.1}
+links:
+- [R1, Gi0/0, SW-CORE, Gi0/1]
+- [SW-CORE, Fa0/1, SW1, Gi0/1]
+- [PC1-1, Fa0, SW1, Fa0/1]
+- [PC1-2, Fa0, SW1, Fa0/2]
+- [PC1-3, Fa0, SW1, Fa0/3]
+- [PC1-4, Fa0, SW1, Fa0/4]
+- [PC1-5, Fa0, SW1, Fa0/5]
+- [PC1-6, Fa0, SW1, Fa0/6]
+- [PC1-7, Fa0, SW1, Fa0/7]
+- [PC1-8, Fa0, SW1, Fa0/8]
+- [PC1-9, Fa0, SW1, Fa0/9]
+- [PC1-10, Fa0, SW1, Fa0/10]
+- [PC1-11, Fa0, SW1, Fa0/11]
+- [PC1-12, Fa0, SW1, Fa0/12]
+- [PC1-13, Fa0, SW1, Fa0/13]
+- [PC1-14, Fa0, SW1, Fa0/14]
+- [PC1-15, Fa0, SW1, Fa0/15]
+- [PC1-16, Fa0, SW1, Fa0/16]
+- [PC1-17, Fa0, SW1, Fa0/17]
+- [PC1-18, Fa0, SW1, Fa0/18]
+- [PC1-19, Fa0, SW1, Fa0/19]
+- [PC1-20, Fa0, SW1, Fa0/20]
+- [SW-CORE, Fa0/2, SW2, Gi0/1]
+- [PC2-1, Fa0, SW2, Fa0/1]
+- [PC2-2, Fa0, SW2, Fa0/2]
+- [PC2-3, Fa0, SW2, Fa0/3]
+- [PC2-4, Fa0, SW2, Fa0/4]
+- [PC2-5, Fa0, SW2, Fa0/5]
+- [PC2-6, Fa0, SW2, Fa0/6]
+- [PC2-7, Fa0, SW2, Fa0/7]
+- [PC2-8, Fa0, SW2, Fa0/8]
+- [PC2-9, Fa0, SW2, Fa0/9]
+- [PC2-10, Fa0, SW2, Fa0/10]
+- [PC2-11, Fa0, SW2, Fa0/11]
+- [PC2-12, Fa0, SW2, Fa0/12]
+- [PC2-13, Fa0, SW2, Fa0/13]
+- [PC2-14, Fa0, SW2, Fa0/14]
+- [PC2-15, Fa0, SW2, Fa0/15]
+- [PC2-16, Fa0, SW2, Fa0/16]
+- [PC2-17, Fa0, SW2, Fa0/17]
+- [PC2-18, Fa0, SW2, Fa0/18]
+- [PC2-19, Fa0, SW2, Fa0/19]
+- [PC2-20, Fa0, SW2, Fa0/20]
+- [SW-CORE, Fa0/3, SW3, Gi0/1]
+- [PC3-1, Fa0, SW3, Fa0/1]
+- [PC3-2, Fa0, SW3, Fa0/2]
+- [PC3-3, Fa0, SW3, Fa0/3]
+- [PC3-4, Fa0, SW3, Fa0/4]
+- [PC3-5, Fa0, SW3, Fa0/5]
+- [PC3-6, Fa0, SW3, Fa0/6]
+- [PC3-7, Fa0, SW3, Fa0/7]
+- [PC3-8, Fa0, SW3, Fa0/8]
+- [PC3-9, Fa0, SW3, Fa0/9]
+- [PC3-10, Fa0, SW3, Fa0/10]
+- [PC3-11, Fa0, SW3, Fa0/11]
+- [PC3-12, Fa0, SW3, Fa0/12]
+- [PC3-13, Fa0, SW3, Fa0/13]
+- [PC3-14, Fa0, SW3, Fa0/14]
+- [PC3-15, Fa0, SW3, Fa0/15]
+- [PC3-16, Fa0, SW3, Fa0/16]
+- [PC3-17, Fa0, SW3, Fa0/17]
+- [PC3-18, Fa0, SW3, Fa0/18]
+- [PC3-19, Fa0, SW3, Fa0/19]
+- [PC3-20, Fa0, SW3, Fa0/20]
+- [SW-CORE, Fa0/4, SW4, Gi0/1]
+- [PC4-1, Fa0, SW4, Fa0/1]
+- [PC4-2, Fa0, SW4, Fa0/2]
+- [PC4-3, Fa0, SW4, Fa0/3]
+- [PC4-4, Fa0, SW4, Fa0/4]
+- [PC4-5, Fa0, SW4, Fa0/5]
+- [PC4-6, Fa0, SW4, Fa0/6]
+- [PC4-7, Fa0, SW4, Fa0/7]
+- [PC4-8, Fa0, SW4, Fa0/8]
+- [PC4-9, Fa0, SW4, Fa0/9]
+- [PC4-10, Fa0, SW4, Fa0/10]
+- [PC4-11, Fa0, SW4, Fa0/11]
+- [PC4-12, Fa0, SW4, Fa0/12]
+- [PC4-13, Fa0, SW4, Fa0/13]
+- [PC4-14, Fa0, SW4, Fa0/14]
+- [PC4-15, Fa0, SW4, Fa0/15]
+- [PC4-16, Fa0, SW4, Fa0/16]
+- [PC4-17, Fa0, SW4, Fa0/17]
+- [PC4-18, Fa0, SW4, Fa0/18]
+- [PC4-19, Fa0, SW4, Fa0/19]
+- [PC4-20, Fa0, SW4, Fa0/20]
+- [SW-CORE, Fa0/5, SW5, Gi0/1]
+- [PC5-1, Fa0, SW5, Fa0/1]
+- [PC5-2, Fa0, SW5, Fa0/2]
+- [PC5-3, Fa0, SW5, Fa0/3]
+- [PC5-4, Fa0, SW5, Fa0/4]
+- [PC5-5, Fa0, SW5, Fa0/5]
+- [PC5-6, Fa0, SW5, Fa0/6]
+- [PC5-7, Fa0, SW5, Fa0/7]
+- [PC5-8, Fa0, SW5, Fa0/8]
+- [PC5-9, Fa0, SW5, Fa0/9]
+- [PC5-10, Fa0, SW5, Fa0/10]
+- [PC5-11, Fa0, SW5, Fa0/11]
+- [PC5-12, Fa0, SW5, Fa0/12]
+- [PC5-13, Fa0, SW5, Fa0/13]
+- [PC5-14, Fa0, SW5, Fa0/14]
+- [PC5-15, Fa0, SW5, Fa0/15]
+- [PC5-16, Fa0, SW5, Fa0/16]
+- [PC5-17, Fa0, SW5, Fa0/17]
+- [PC5-18, Fa0, SW5, Fa0/18]
+- [PC5-19, Fa0, SW5, Fa0/19]
+- [PC5-20, Fa0, SW5, Fa0/20]
+- [SW-CORE, Fa0/6, SW6, Gi0/1]
+- [PC6-1, Fa0, SW6, Fa0/1]
+- [PC6-2, Fa0, SW6, Fa0/2]
+- [PC6-3, Fa0, SW6, Fa0/3]
+- [PC6-4, Fa0, SW6, Fa0/4]
+- [PC6-5, Fa0, SW6, Fa0/5]
+- [PC6-6, Fa0, SW6, Fa0/6]
+- [PC6-7, Fa0, SW6, Fa0/7]
+- [PC6-8, Fa0, SW6, Fa0/8]
+- [PC6-9, Fa0, SW6, Fa0/9]
+- [PC6-10, Fa0, SW6, Fa0/10]
+- [PC6-11, Fa0, SW6, Fa0/11]
+- [PC6-12, Fa0, SW6, Fa0/12]
+- [PC6-13, Fa0, SW6, Fa0/13]
+- [PC6-14, Fa0, SW6, Fa0/14]
+- [PC6-15, Fa0, SW6, Fa0/15]
+- [PC6-16, Fa0, SW6, Fa0/16]
+- [PC6-17, Fa0, SW6, Fa0/17]
+- [PC6-18, Fa0, SW6, Fa0/18]
+- [PC6-19, Fa0, SW6, Fa0/19]
+- [PC6-20, Fa0, SW6, Fa0/20]
+- [SW-CORE, Fa0/7, SW7, Gi0/1]
+- [PC7-1, Fa0, SW7, Fa0/1]
+- [PC7-2, Fa0, SW7, Fa0/2]
+- [PC7-3, Fa0, SW7, Fa0/3]
+- [PC7-4, Fa0, SW7, Fa0/4]
+- [PC7-5, Fa0, SW7, Fa0/5]
+- [PC7-6, Fa0, SW7, Fa0/6]
+- [PC7-7, Fa0, SW7, Fa0/7]
+- [PC7-8, Fa0, SW7, Fa0/8]
+- [PC7-9, Fa0, SW7, Fa0/9]
+- [PC7-10, Fa0, SW7, Fa0/10]
+- [PC7-11, Fa0, SW7, Fa0/11]
+- [PC7-12, Fa0, SW7, Fa0/12]
+- [PC7-13, Fa0, SW7, Fa0/13]
+- [PC7-14, Fa0, SW7, Fa0/14]
+- [PC7-15, Fa0, SW7, Fa0/15]
+- [PC7-16, Fa0, SW7, Fa0/16]
+- [PC7-17, Fa0, SW7, Fa0/17]
+- [PC7-18, Fa0, SW7, Fa0/18]
+- [PC7-19, Fa0, SW7, Fa0/19]
+- [PC7-20, Fa0, SW7, Fa0/20]
+- [SW-CORE, Fa0/8, SW8, Gi0/1]
+- [PC8-1, Fa0, SW8, Fa0/1]
+- [PC8-2, Fa0, SW8, Fa0/2]
+- [PC8-3, Fa0, SW8, Fa0/3]
+- [PC8-4, Fa0, SW8, Fa0/4]
+- [PC8-5, Fa0, SW8, Fa0/5]
+- [PC8-6, Fa0, SW8, Fa0/6]
+- [PC8-7, Fa0, SW8, Fa0/7]
+- [PC8-8, Fa0, SW8, Fa0/8]
+- [PC8-9, Fa0, SW8, Fa0/9]
+- [PC8-10, Fa0, SW8, Fa0/10]
+- [PC8-11, Fa0, SW8, Fa0/11]
+- [PC8-12, Fa0, SW8, Fa0/12]
+- [PC8-13, Fa0, SW8, Fa0/13]
+- [PC8-14, Fa0, SW8, Fa0/14]
+- [PC8-15, Fa0, SW8, Fa0/15]
+- [PC8-16, Fa0, SW8, Fa0/16]
+- [PC8-17, Fa0, SW8, Fa0/17]
+- [PC8-18, Fa0, SW8, Fa0/18]
+- [PC8-19, Fa0, SW8, Fa0/19]
+- [PC8-20, Fa0, SW8, Fa0/20]
