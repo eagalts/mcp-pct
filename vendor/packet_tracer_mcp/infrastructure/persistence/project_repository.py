@@ -1,0 +1,74 @@
+"""
+Project repository: persistence of plans and artifacts.
+"""
+
+from __future__ import annotations
+import json
+from pathlib import Path
+from datetime import datetime, timezone
+from ...domain.models.plans import TopologyPlan
+from ...shared.utils import safe_name_component, resolve_within
+
+
+class ProjectRepository:
+    """Manages project persistence."""
+
+    def __init__(self, base_dir: str | Path = "projects"):
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
+
+    def save_plan(self, plan: TopologyPlan, project_name: str | None = None) -> Path:
+        """Saves a plan as JSON."""
+        base_name = (project_name or plan.name or "topology").strip() or "topology"
+        name = safe_name_component(base_name)
+        project_dir = resolve_within(self.base_dir, name)
+        project_dir.mkdir(parents=True, exist_ok=True)
+
+        plan_path = project_dir / "plan.json"
+        plan_path.write_text(plan.model_dump_json(indent=2), encoding="utf-8")
+
+        # Metadata
+        meta_path = project_dir / "metadata.json"
+        meta = {
+            "project_name": name,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "devices": len(plan.devices),
+            "links": len(plan.links),
+            "is_valid": plan.is_valid,
+        }
+        meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+        return plan_path
+
+    def load_plan(self, project_name: str) -> TopologyPlan:
+        """Loads a plan from JSON."""
+        plan_path = resolve_within(
+            self.base_dir, safe_name_component(project_name), "plan.json"
+        )
+        if not plan_path.exists():
+            raise FileNotFoundError(f"Project '{project_name}' not found")
+        return TopologyPlan.model_validate_json(plan_path.read_text(encoding="utf-8"))
+
+    def list_projects(self) -> list[dict]:
+        """Lists all saved projects."""
+        projects = []
+        for d in sorted(self.base_dir.iterdir()):
+            if d.is_dir():
+                meta_path = d / "metadata.json"
+                if meta_path.exists():
+                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                    projects.append(meta)
+                else:
+                    projects.append({"project_name": d.name})
+        return projects
+
+    def delete_project(self, project_name: str) -> bool:
+        """Deletes a project."""
+        # Confined rmtree: without resolve_within, a project_name containing ".."
+        # would recursively delete any directory on the machine.
+        project_dir = resolve_within(self.base_dir, safe_name_component(project_name))
+        if not project_dir.exists():
+            return False
+        import shutil
+        shutil.rmtree(project_dir)
+        return True

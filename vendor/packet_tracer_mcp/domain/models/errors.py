@@ -1,0 +1,192 @@
+"""
+System error taxonomy.
+
+Each error has a code, message and suggestion so the LLM
+can understand what failed and how to fix it automatically.
+"""
+
+from __future__ import annotations
+from dataclasses import dataclass, field
+from enum import Enum
+
+
+class ErrorCode(str, Enum):
+    # Devices
+    UNKNOWN_DEVICE_MODEL = "UNKNOWN_DEVICE_MODEL"
+    DUPLICATE_DEVICE_NAME = "DUPLICATE_DEVICE_NAME"
+    DEVICE_INVALID_NAME = "DEVICE_INVALID_NAME"
+    INSUFFICIENT_PORTS = "INSUFFICIENT_PORTS"
+
+    # Links
+    DEVICE_NOT_FOUND = "DEVICE_NOT_FOUND"
+    INVALID_PORT = "INVALID_PORT"
+    PORT_ALREADY_USED = "PORT_ALREADY_USED"
+    INVALID_CABLE_TYPE = "INVALID_CABLE_TYPE"
+
+    # IPs
+    INVALID_IP_ADDRESS = "INVALID_IP_ADDRESS"
+    SUBNET_OVERLAP = "SUBNET_OVERLAP"
+    IP_CONFLICT = "IP_CONFLICT"
+
+    # DHCP
+    DHCP_ROUTER_NOT_FOUND = "DHCP_ROUTER_NOT_FOUND"
+    DHCP_GATEWAY_MISMATCH = "DHCP_GATEWAY_MISMATCH"
+    DHCP_INVALID_POOL_NAME = "DHCP_INVALID_POOL_NAME"
+
+    # DHCP on a Server-PT (pt_configure_dhcp_server)
+    DHCP_SERVER_DEVICE_NOT_FOUND = "DHCP_SERVER_DEVICE_NOT_FOUND"
+    DHCP_SERVER_PORT_NOT_FOUND = "DHCP_SERVER_PORT_NOT_FOUND"
+    DHCP_SERVER_INVALID_ADDRESS = "DHCP_SERVER_INVALID_ADDRESS"
+    DHCP_SERVER_OUT_OF_SUBNET = "DHCP_SERVER_OUT_OF_SUBNET"
+    DHCP_SERVER_INVALID_RANGE = "DHCP_SERVER_INVALID_RANGE"
+    DHCP_SERVER_RANGE_OVERLAP = "DHCP_SERVER_RANGE_OVERLAP"
+    DHCP_SERVER_INCOMPLETE = "DHCP_SERVER_INCOMPLETE"
+    DHCP_SERVER_NO_IP = "DHCP_SERVER_NO_IP"
+
+    # Routing
+    UNSUPPORTED_ROUTING_PROTOCOL = "UNSUPPORTED_ROUTING_PROTOCOL"
+    OSPF_NO_NETWORKS = "OSPF_NO_NETWORKS"
+    OSPF_INVALID_ROUTER_ID = "OSPF_INVALID_ROUTER_ID"
+
+    # Topology (shape of the graph)
+    TOPOLOGY_DISCONNECTED = "TOPOLOGY_DISCONNECTED"
+
+    # Wireless
+    WIRELESS_AMBIGUOUS_ASSOCIATION = "WIRELESS_AMBIGUOUS_ASSOCIATION"
+
+    # Templates
+    TEMPLATE_CONSTRAINT_VIOLATION = "TEMPLATE_CONSTRAINT_VIOLATION"
+
+    # ACL
+    ACL_ROUTER_NOT_FOUND = "ACL_ROUTER_NOT_FOUND"
+    ACL_INTERFACE_NOT_FOUND = "ACL_INTERFACE_NOT_FOUND"
+    ACL_INVALID_NUMBER = "ACL_INVALID_NUMBER"
+    ACL_TYPE_MISMATCH = "ACL_TYPE_MISMATCH"
+    ACL_DUPLICATE_SEQUENCE = "ACL_DUPLICATE_SEQUENCE"
+    ACL_INVALID_WILDCARD = "ACL_INVALID_WILDCARD"
+    ACL_INVALID_PROTOCOL_FOR_PORTS = "ACL_INVALID_PROTOCOL_FOR_PORTS"
+    ACL_UNREACHABLE_RULE = "ACL_UNREACHABLE_RULE"
+    ACL_EMPTY = "ACL_EMPTY"
+    ACL_INVALID_REMARK = "ACL_INVALID_REMARK"
+    ACL_INVALID_NAME = "ACL_INVALID_NAME"
+
+    # NAT
+    NAT_ROUTER_NOT_FOUND = "NAT_ROUTER_NOT_FOUND"
+    NAT_INTERFACE_NOT_FOUND = "NAT_INTERFACE_NOT_FOUND"
+    NAT_INVALID_IP = "NAT_INVALID_IP"
+    NAT_INVALID_NETMASK = "NAT_INVALID_NETMASK"
+    NAT_POOL_RANGE_INVALID = "NAT_POOL_RANGE_INVALID"
+    NAT_MISSING_INSIDE_NETWORKS = "NAT_MISSING_INSIDE_NETWORKS"
+    NAT_MISSING_STATIC_MAPPINGS = "NAT_MISSING_STATIC_MAPPINGS"
+    NAT_MISSING_POOL = "NAT_MISSING_POOL"
+    NAT_SAME_INTERFACE = "NAT_SAME_INTERFACE"
+    NAT_INVALID_NAME = "NAT_INVALID_NAME"
+
+    # VLAN / trunk / inter-VLAN
+    VLAN_INVALID_ID = "VLAN_INVALID_ID"
+    VLAN_DUPLICATE_ID = "VLAN_DUPLICATE_ID"
+    VLAN_SUBNET_OVERLAP = "VLAN_SUBNET_OVERLAP"
+    VLAN_TRUNK_PORT_INVALID = "VLAN_TRUNK_PORT_INVALID"
+    VLAN_ROUTER_NOT_FOUND = "VLAN_ROUTER_NOT_FOUND"
+    VLAN_SWITCH_NOT_FOUND = "VLAN_SWITCH_NOT_FOUND"
+    VLAN_INTERFACE_NOT_FOUND = "VLAN_INTERFACE_NOT_FOUND"
+    VLAN_INVALID_NAME = "VLAN_INVALID_NAME"
+
+    # STP / port-security
+    STP_INVALID_PRIORITY = "STP_INVALID_PRIORITY"
+    STP_SWITCH_NOT_FOUND = "STP_SWITCH_NOT_FOUND"
+    PORTSEC_SWITCH_NOT_FOUND = "PORTSEC_SWITCH_NOT_FOUND"
+    PORTSEC_INVALID_MAC = "PORTSEC_INVALID_MAC"
+    PORTSEC_INVALID_MAX = "PORTSEC_INVALID_MAX"
+
+    # Device hardening
+    HARDENING_DEVICE_NOT_FOUND = "HARDENING_DEVICE_NOT_FOUND"
+    HARDENING_SSH_REQUIRES_DOMAIN = "HARDENING_SSH_REQUIRES_DOMAIN"
+    HARDENING_WEAK_MODULUS = "HARDENING_WEAK_MODULUS"
+    HARDENING_INVALID_CHARS = "HARDENING_INVALID_CHARS"
+    HARDENING_CONSOLE_LOGIN = "HARDENING_CONSOLE_LOGIN"
+
+    # NetFlow
+    NETFLOW_INVALID_NAME = "NETFLOW_INVALID_NAME"
+    NETFLOW_INVALID_DESTINATION = "NETFLOW_INVALID_DESTINATION"
+    NETFLOW_INVALID_PORT = "NETFLOW_INVALID_PORT"
+    NETFLOW_INVALID_VERSION = "NETFLOW_INVALID_VERSION"
+    NETFLOW_INCOMPLETE = "NETFLOW_INCOMPLETE"
+    NETFLOW_DEVICE_NOT_FOUND = "NETFLOW_DEVICE_NOT_FOUND"
+    NETFLOW_PORT_NOT_FOUND = "NETFLOW_PORT_NOT_FOUND"
+
+    # Interface tuning
+    IFTUNE_DEVICE_NOT_FOUND = "IFTUNE_DEVICE_NOT_FOUND"
+    IFTUNE_INTERFACE_NOT_FOUND = "IFTUNE_INTERFACE_NOT_FOUND"
+    IFTUNE_CLOCKRATE_NOT_SERIAL = "IFTUNE_CLOCKRATE_NOT_SERIAL"
+    IFTUNE_INVALID_OSPF_AUTH = "IFTUNE_INVALID_OSPF_AUTH"
+    IFTUNE_INVALID_OSPF_TIMERS = "IFTUNE_INVALID_OSPF_TIMERS"
+
+    # Console (IOS CLI / host Command Prompt)
+    CONSOLE_DEVICE_REQUIRED = "CONSOLE_DEVICE_REQUIRED"
+    CONSOLE_EMPTY = "CONSOLE_EMPTY"
+    CONSOLE_INVALID_CHARS = "CONSOLE_INVALID_CHARS"
+    CONSOLE_COMMAND_TOO_LONG = "CONSOLE_COMMAND_TOO_LONG"
+    CONSOLE_TOO_MANY_COMMANDS = "CONSOLE_TOO_MANY_COMMANDS"
+    CONSOLE_INVALID_TIMEOUT = "CONSOLE_INVALID_TIMEOUT"
+
+    # Device panel (IP Configuration, interface, services)
+    PANEL_INVALID_IP = "PANEL_INVALID_IP"
+    PANEL_INVALID_VALUE = "PANEL_INVALID_VALUE"
+    PANEL_INVALID_CHARS = "PANEL_INVALID_CHARS"
+
+    # General
+    INVALID_INTERFACE_ASSIGNMENT = "INVALID_INTERFACE_ASSIGNMENT"
+    VALIDATION_ERROR = "VALIDATION_ERROR"
+
+
+@dataclass
+class PlanError:
+    """Structured error with a code, message and fix suggestion."""
+    code: ErrorCode
+    message: str
+    device: str = ""
+    suggestion: str = ""
+
+    def __str__(self) -> str:
+        parts = [f"[{self.code.value}]"]
+        if self.device:
+            parts.append(f"({self.device})")
+        parts.append(self.message)
+        if self.suggestion:
+            parts.append(f"→ Suggestion: {self.suggestion}")
+        return " ".join(parts)
+
+    def to_dict(self) -> dict:
+        return {
+            "error_code": self.code.value,
+            "device": self.device,
+            "message": self.message,
+            "suggestion": self.suggestion,
+        }
+
+
+@dataclass
+class ValidationResult:
+    """Complete result of a validation."""
+    errors: list[PlanError] = field(default_factory=list)
+    warnings: list[PlanError] = field(default_factory=list)
+
+    @property
+    def is_valid(self) -> bool:
+        return len(self.errors) == 0
+
+    def error_messages(self) -> list[str]:
+        return [str(e) for e in self.errors]
+
+    def warning_messages(self) -> list[str]:
+        return [str(w) for w in self.warnings]
+
+    def to_dict(self) -> dict:
+        return {
+            "valid": self.is_valid,
+            "error_count": len(self.errors),
+            "warning_count": len(self.warnings),
+            "errors": [e.to_dict() for e in self.errors],
+            "warnings": [w.to_dict() for w in self.warnings],
+        }

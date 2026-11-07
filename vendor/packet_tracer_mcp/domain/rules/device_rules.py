@@ -1,0 +1,76 @@
+"""Device validation rules."""
+
+from __future__ import annotations
+from ..models.plans import TopologyPlan
+from ..models.errors import PlanError, ErrorCode, ValidationResult
+from ...infrastructure.catalog.devices import resolve_model
+from .text_rules import has_control_chars
+
+
+def validate_devices(plan: TopologyPlan) -> list[PlanError]:
+    """Validates that all devices are valid."""
+    errors: list[PlanError] = []
+    names_seen: set[str] = set()
+
+    for dev in plan.devices:
+        if has_control_chars(dev.name):
+            errors.append(PlanError(
+                code=ErrorCode.DEVICE_INVALID_NAME,
+                device=dev.name,
+                message=f"The device name '{dev.name}' contains a line break.",
+                suggestion="Use a single-line device name.",
+            ))
+
+        if dev.name in names_seen:
+            errors.append(PlanError(
+                code=ErrorCode.DUPLICATE_DEVICE_NAME,
+                device=dev.name,
+                message=f"Duplicate device name: '{dev.name}'",
+                suggestion="Rename one of the duplicate devices.",
+            ))
+        names_seen.add(dev.name)
+
+        model = resolve_model(dev.model)
+        if model is None:
+            errors.append(PlanError(
+                code=ErrorCode.UNKNOWN_DEVICE_MODEL,
+                device=dev.name,
+                message=f"Unknown model '{dev.model}'.",
+                suggestion=(
+                    "Use a valid model. "
+                    "Routers: 1841, 1941, 2620XM, 2621XM, 2811, 2901, 2911, "
+                    "819HG-4G-IOX, 819HGW, 829, CGR1240, ISR4321, ISR4331, Router-PT, Router-PT-Empty. "
+                    "Switches: 2950-24, 2950T-24, 2960-24TT, 3560-24PS, 3650-24PS, IE-2000, "
+                    "Switch-PT, Switch-PT-Empty. "
+                    "End devices: PC-PT, Server-PT, Laptop-PT, TabletPC-PT, SMARTPHONE-PT, Printer-PT, "
+                    "WirelessEndDevice-PT, WiredEndDevice-PT, TV-PT, Home-VoIP-PT, Analog-Phone-PT, "
+                    "Embedded-Server-PT. "
+                    "Others: Cloud-PT, Cloud-PT-Empty, AccessPoint-PT, AccessPoint-PT-A, "
+                    "AccessPoint-PT-N, AccessPoint-PT-AC, LAP-PT, 3702i, Hub-PT, Bridge-PT, "
+                    "Repeater-PT, CoAxialSplitter-PT, 5505, 5506-X, WLC-PT, WLC-2504, WLC-3504, "
+                    "DSL-Modem-PT, Cable-Modem-PT, Linksys-WRT300N, HomeRouter-PT-AC, "
+                    "7960, Cell-Tower, Central-Office-Server, 802, 803, Sniffer, "
+                    "MCU-PT, SBC-PT, DLC100, Meraki-MX65W, Meraki-Server, NetworkController, "
+                    "Power Distribution Device, Copper Patch Panel, Fiber Patch Panel, "
+                    "Copper Wall Mount, Fiber Wall Mount, Thing."
+                ),
+            ))
+
+    # extra_cli: each line is typed as one IOS command, so a line break would smuggle
+    # in an unrequested one (`reload`...), and a key with no device is a typo.
+    for name, lines in plan.extra_cli.items():
+        if name not in names_seen:
+            errors.append(PlanError(
+                code=ErrorCode.DEVICE_INVALID_NAME, device=name,
+                message=f"extra_cli names '{name}', which is not a device of the plan.",
+                suggestion="Use the exact name of a router or switch in `devices`.",
+            ))
+        for line in lines:
+            if has_control_chars(line):
+                errors.append(PlanError(
+                    code=ErrorCode.DEVICE_INVALID_NAME, device=name,
+                    message=f"extra_cli line for '{name}' contains a line break: {line!r}",
+                    suggestion="One IOS command per list item.",
+                ))
+
+    return errors
